@@ -1,0 +1,91 @@
+{
+  "id": "indices",
+  "version": "0.1.2",
+  "apiVersion": "2.0",
+  "displayName": "Índices",
+  "assets": {
+    "styles": [
+      "./dist/assets/tailwind.css",
+      "./dist/assets/fontawesome/css/all.min.css"
+    ]
+  },
+  "contributes": {
+    "menus": [],
+    "views": [],
+    "repositories": [
+      {
+        "module": "./dist/repositories/index-value.repository.js",
+        "export": "IndexValueRepository",
+        "prefix": "indices.values"
+      },
+      {
+        "module": "./dist/repositories/fx-rate.repository.js",
+        "export": "FxRateRepository",
+        "prefix": "indices.fx"
+      }
+    ],
+    "settings": {
+      "groups": [{ "id": "indices", "label": "indices", "order": 50 }],
+      "pages": [
+        {
+          "id": "indices.series",
+          "group": "indices",
+          "label": "Índices",
+          "icon": "TrendingUp",
+          "order": 30
+        }
+      ],
+      "sections": [
+        {
+          "id": "indices.series.de-donde-salen-los-valores",
+          "page": "indices.series",
+          "label": "De dónde salen los valores",
+          "order": 10,
+          "items": [
+            {
+              "key": "indices.icl.source",
+              "type": "enum",
+              "label": "Serie del ICL",
+              "description": "«BCRA» baja la serie diaria del organismo cuando hace falta calcular una actualización. «Manual» la desactiva: los valores los cargás vos, y una actualización sin el valor cargado no se calcula. Sirve si trabajás sin internet o si preferís controlar cada número.",
+              "default": "bcra",
+              "options": [
+                { "value": "bcra", "label": "Bajarla del BCRA" },
+                { "value": "manual", "label": "Cargarla a mano" }
+              ],
+              "tags": ["indices", "icl", "source", "serie"]
+            }
+          ]
+        },
+        {
+          "id": "indices.series.deteccion-de-actualizaciones",
+          "page": "indices.series",
+          "label": "Detección de actualizaciones",
+          "order": 20,
+          "items": [
+            {
+              "key": "indices.adjustments.detection",
+              "type": "enum",
+              "label": "Cuándo buscar contratos a actualizar",
+              "description": "«A mano»: buscás vos desde Actualizaciones. «Diaria»: el sistema revisa todos los días y deja las propuestas esperando. En los dos casos el alquiler cambia solo cuando vos confirmás — nunca se aplica solo.",
+              "default": "manual",
+              "options": [
+                { "value": "manual", "label": "A mano" },
+                { "value": "daily", "label": "Revisar todos los días" }
+              ],
+              "tags": [
+                "indices",
+                "adjustments",
+                "detection",
+                "cuándo",
+                "buscar",
+                "contratos",
+                "actualizar"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "copilotCapabilities": []
+  }
+}
