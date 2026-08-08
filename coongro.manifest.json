@@ -1,6 +1,6 @@
 {
   "id": "indices",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "apiVersion": "2.0",
   "displayName": "Índices",
   "assets": {
@@ -33,7 +33,11 @@
         "module": "./dist/repositories/fx-rate.repository.js",
         "export": "FxRateRepository",
         "prefix": "indices.fx",
-        "actions": ["houses", "rate", "convert"]
+        "actions": [
+          "houses",
+          "rate",
+          "convert"
+        ]
       }
     ],
     "settings": {
@@ -151,7 +155,9 @@
               "description": "Qué cotización usar, según lo pactado. Si se omite, la oficial."
             }
           },
-          "required": ["amount"],
+          "required": [
+            "amount"
+          ],
           "additionalProperties": false
         },
         "output": {
@@ -244,7 +250,9 @@
               "description": "Qué índice: «ICL», «IPC», «CasaPropia». Va en mayúsculas."
             }
           },
-          "required": ["indexCode"],
+          "required": [
+            "indexCode"
+          ],
           "additionalProperties": false
         },
         "output": {
@@ -311,7 +319,12 @@
               "description": "El alquiler vigente, el que se va a multiplicar por el factor."
             }
           },
-          "required": ["indexCode", "dateFrom", "dateTo", "previousRent"],
+          "required": [
+            "indexCode",
+            "dateFrom",
+            "dateTo",
+            "previousRent"
+          ],
           "additionalProperties": false
         },
         "output": {
@@ -443,7 +456,11 @@
               "description": "Hasta qué día."
             }
           },
-          "required": ["indexCode", "from", "to"],
+          "required": [
+            "indexCode",
+            "from",
+            "to"
+          ],
           "additionalProperties": false
         },
         "output": {
