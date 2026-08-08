@@ -1,6 +1,6 @@
 {
   "name": "@coongro/indices",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "description": "Series de índices para actualizar alquileres: ICL del BCRA, IPC del INDEC y Casa Propia. Guarda la serie diaria y calcula el factor entre dos fechas, dejando registrados los valores usados para que cada actualización sea auditable.",
   "main": "dist/index.js",

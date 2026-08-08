@@ -1,5 +1,13 @@
 # @coongro/indices
 
+## 0.3.0
+
+### Minor Changes
+
+- c022c26: El catálogo de capacidades del plugin, declarado en código y certificado
+
+  Las seis capacidades de series de índices —cotización, conversión y última medición— se declaran con Action Contracts junto a su handler.
+
 ## 0.2.0
 
 ### Minor Changes
