@@ -1,0 +1,840 @@
+{
+  "version": 1,
+  "pluginId": "indices",
+  "overrides": {
+    "q:indices.fx.convert": {
+      "type": "agentic.query",
+      "fields": {
+        "crossScope": {
+          "note": "No escribe ninguna tabla: es una cuenta sobre la cotización que devuelve «Cotización del dólar». Lo único que puede persistirse es esa cotización, y lo hace la otra operación. El prefijo `indices.fx` no tiene entidad propia; las cotizaciones viven en la tabla de valores de índice.",
+          "rule": "none"
+        }
+      },
+      "prov": {
+        "crossScope": "user"
+      }
+    },
+    "q:indices.fx.houses": {
+      "type": "agentic.query",
+      "fields": {
+        "crossScope": {
+          "note": "No toca la base: devuelve la lista de casas de cambio admitidas, que es una constante del código. No hay tabla contra la cual cruzarla porque no hay nada persistido que verificar.",
+          "rule": "none"
+        }
+      },
+      "prov": {
+        "crossScope": "user"
+      }
+    },
+    "q:indices.fx.rate": {
+      "type": "agentic.query",
+      "fields": {
+        "crossScope": {
+          "note": "El prefijo `indices.fx` no tiene tabla propia: las cotizaciones se guardan en la misma tabla de valores de índice que el resto (`module_indices_index_values`), con el código `USD_<casa>`. Por eso el cruce no encuentra `module_indices_fx` — no falta un schema, no existe esa entidad. Lo que la operación escribe es la copia local de un dato público: si la cotización del día no está guardada, la trae de la fuente y la persiste para no volver a salir a internet por lo mismo. Es idempotente por (código, fecha) y deja anotada la fuente.",
+          "rule": "none"
+        }
+      },
+      "prov": {
+        "crossScope": "user"
+      }
+    }
+  },
+  "nodes": {
+    "cmd:indices.values.create": {
+      "type": "agentic.command",
+      "groupId": "ph-operacion",
+      "data": {
+        "actionId": "indices.values.create",
+        "argSchemas": {
+          "data": {
+            "additionalProperties": false,
+            "description": "Campos de Index-value.",
+            "properties": {
+              "index_code": {
+                "description": "Index code",
+                "type": "string"
+              },
+              "source": {
+                "description": "Source",
+                "type": "string"
+              },
+              "value": {
+                "description": "Value",
+                "type": "number"
+              },
+              "value_date": {
+                "description": "Value date",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "args": [
+          {
+            "description": "Campos de Index-value.",
+            "label": "data",
+            "name": "data",
+            "required": true,
+            "type": "object"
+          }
+        ],
+        "confirmation": "always",
+        "contractDraft": {
+          "confidence": "media",
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "data": {
+                "additionalProperties": false,
+                "description": "Campos de Index-value.",
+                "properties": {
+                  "index_code": {
+                    "description": "Index code",
+                    "type": "string"
+                  },
+                  "source": {
+                    "description": "Source",
+                    "type": "string"
+                  },
+                  "value": {
+                    "description": "Value",
+                    "type": "number"
+                  },
+                  "value_date": {
+                    "description": "Value date",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "required": [
+              "data"
+            ],
+            "type": "object"
+          },
+          "source": "drizzle"
+        },
+        "effect": "write",
+        "excluded": true,
+        "excludedReason": "Alta suelta de un valor de índice. Los valores son dato oficial del organismo que los publica; escribirlos de a uno solo sirve para el fallback manual de una pantalla, con alguien mirando la publicación. Un agente cargando un ICL a mano está fabricando la prueba con la que después se justifica una suba de alquiler.",
+        "idempotent": false,
+        "origin": "inferred",
+        "outputs": [],
+        "permissions": [],
+        "preconditions": [],
+        "tenantScope": "required",
+        "transactional": false
+      },
+      "prov": {
+        "actionId": "inferred",
+        "args": "inferred",
+        "excluded": "user",
+        "excludedReason": "user"
+      }
+    },
+    "cmd:indices.values.delete": {
+      "type": "agentic.command",
+      "groupId": "ph-operacion",
+      "data": {
+        "actionId": "indices.values.delete",
+        "argSchemas": {
+          "id": {
+            "description": "ID del registro.",
+            "ref": {
+              "resource": "indices.values"
+            },
+            "type": "string"
+          }
+        },
+        "args": [
+          {
+            "description": "ID del registro.",
+            "label": "id",
+            "name": "id",
+            "required": true,
+            "resource": "indices.values",
+            "type": "ref"
+          }
+        ],
+        "confirmation": "always",
+        "contract": {
+          "confirmation": "always",
+          "description": "Ejecuta indices.values.delete.",
+          "effect": "destructive",
+          "generatedBy": "builder-high-confidence",
+          "id": "indices.values.delete",
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "description": "ID del registro.",
+                "ref": {
+                  "resource": "indices.values"
+                },
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "type": "object"
+          },
+          "tenantScope": "required",
+          "title": "Delete"
+        },
+        "contractAdoption": {
+          "confidence": "alta",
+          "kind": "automatic",
+          "source": "drizzle"
+        },
+        "contractAuthority": true,
+        "contractDraft": {
+          "confidence": "alta",
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "description": "ID del registro.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "type": "object"
+          },
+          "source": "drizzle"
+        },
+        "description": "Ejecuta indices.values.delete.",
+        "effect": "destructive",
+        "excluded": true,
+        "excludedReason": "Borra un valor de la serie. Un agujero en la serie no da error: hace que el factor se calcule contra la fecha anterior disponible y devuelva un número plausible y equivocado. Ninguna pantalla lo ejercita.",
+        "idempotent": false,
+        "origin": "inferred",
+        "outputs": [],
+        "permissions": [],
+        "preconditions": [],
+        "requiredArgs": [
+          "id"
+        ],
+        "tenantScope": "required",
+        "title": "Delete",
+        "transactional": false
+      },
+      "prov": {
+        "actionId": "generated",
+        "args": "custom",
+        "argSchemas": "custom",
+        "confirmation": "custom",
+        "contract": "user",
+        "contractAdoption": "user",
+        "contractAuthority": "generated",
+        "contractDraft": "user",
+        "description": "generated",
+        "effect": "custom",
+        "excluded": "user",
+        "excludedReason": "user",
+        "idempotent": "user",
+        "outputs": "custom",
+        "permissions": "user",
+        "preconditions": "user",
+        "requiredArgs": "custom",
+        "tenantScope": "custom",
+        "title": "generated",
+        "transactional": "user"
+      }
+    },
+    "cmd:indices.values.update": {
+      "type": "agentic.command",
+      "groupId": "ph-operacion",
+      "data": {
+        "actionId": "indices.values.update",
+        "argSchemas": {
+          "data": {
+            "additionalProperties": false,
+            "description": "Campos de Index-value.",
+            "properties": {
+              "index_code": {
+                "description": "Index code",
+                "type": "string"
+              },
+              "source": {
+                "description": "Source",
+                "type": "string"
+              },
+              "value": {
+                "description": "Value",
+                "type": "number"
+              },
+              "value_date": {
+                "description": "Value date",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "id": {
+            "description": "ID del registro.",
+            "type": "string"
+          }
+        },
+        "args": [
+          {
+            "description": "ID del registro.",
+            "label": "id",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Campos de Index-value.",
+            "label": "data",
+            "name": "data",
+            "required": true,
+            "type": "object"
+          }
+        ],
+        "confirmation": "always",
+        "contractDraft": {
+          "confidence": "media",
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "data": {
+                "additionalProperties": false,
+                "description": "Campos de Index-value.",
+                "properties": {
+                  "index_code": {
+                    "description": "Index code",
+                    "type": "string"
+                  },
+                  "source": {
+                    "description": "Source",
+                    "type": "string"
+                  },
+                  "value": {
+                    "description": "Value",
+                    "type": "number"
+                  },
+                  "value_date": {
+                    "description": "Value date",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "id": {
+                "description": "ID del registro.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "data"
+            ],
+            "type": "object"
+          },
+          "source": "drizzle"
+        },
+        "effect": "write",
+        "excluded": true,
+        "excludedReason": "Editar un valor ya publicado. Cuando el BCRA corrige un valor, la corrección entra por la baja de la serie (`upsertMany` por fecha), que es idempotente y deja constancia de la fuente. Editarlo suelto reescribe la base de un cálculo que ya se usó para fijar un alquiler.",
+        "idempotent": false,
+        "origin": "inferred",
+        "outputs": [],
+        "permissions": [],
+        "preconditions": [],
+        "tenantScope": "required",
+        "transactional": false
+      },
+      "prov": {
+        "actionId": "inferred",
+        "args": "inferred",
+        "excluded": "user",
+        "excludedReason": "user"
+      }
+    },
+    "cmd:indices.values.upsertMany": {
+      "type": "agentic.command",
+      "groupId": "ph-operacion",
+      "data": {
+        "actionId": "indices.values.upsertMany",
+        "argSchemas": {},
+        "args": [],
+        "confirmation": "always",
+        "contractDraft": {
+          "confidence": "no-inferible",
+          "source": "drizzle"
+        },
+        "effect": "write",
+        "excluded": true,
+        "excludedReason": "Carga en bloque los valores de un índice. Es lo que corre el adaptador cuando baja la serie del BCRA, no algo que alguien deba escribir a mano: un valor de ICL inventado no rompe nada visible y sin embargo cambia el alquiler de todos los contratos que se actualicen contra esa fecha, con la apariencia de un cálculo oficial. La carga la hace el adaptador, y «Cotizar una actualización» ya baja lo que falte cuando lo necesita.",
+        "idempotent": false,
+        "origin": "inferred",
+        "outputs": [],
+        "permissions": [],
+        "preconditions": [],
+        "tenantScope": "required",
+        "transactional": false
+      },
+      "prov": {
+        "actionId": "inferred",
+        "args": "inferred",
+        "excluded": "user",
+        "excludedReason": "user"
+      }
+    },
+    "esc:indices.cotizar-actualizacion": {
+      "type": "agentic.scenario",
+      "groupId": "ph-pruebas",
+      "data": {
+        "expected": "",
+        "fixtures": {
+          "dateFrom": "2026-01-31",
+          "dateTo": "2026-07-31",
+          "from": "2026-01-31",
+          "indexCode": "ICL",
+          "previousRent": "500000.00",
+          "to": "2026-07-31"
+        },
+        "name": "Ver hasta dónde llegó el ICL y cotizar la actualización",
+        "steps": [
+          "indices.values.lastValue",
+          "indices.values.series",
+          "indices.values.quote"
+        ]
+      }
+    },
+    "esc:indices.pasar-a-pesos": {
+      "type": "agentic.scenario",
+      "groupId": "ph-pruebas",
+      "data": {
+        "expected": "",
+        "fixtures": {
+          "amount": "800.00",
+          "currency": "USD",
+          "house": "oficial"
+        },
+        "name": "Elegir la cotización pactada y pasar un alquiler en dólares a pesos",
+        "steps": [
+          "indices.fx.houses",
+          "indices.fx.rate",
+          "indices.fx.convert"
+        ]
+      }
+    },
+    "q:indices.values.getById": {
+      "type": "agentic.query",
+      "groupId": "ph-consultas",
+      "data": {
+        "actionId": "indices.values.getById",
+        "argSchemas": {
+          "id": {
+            "description": "ID del registro.",
+            "ref": {
+              "resource": "indices.values"
+            },
+            "type": "string"
+          }
+        },
+        "args": [
+          {
+            "description": "ID del registro.",
+            "label": "id",
+            "name": "id",
+            "required": true,
+            "resource": "indices.values",
+            "type": "ref"
+          }
+        ],
+        "contract": {
+          "confirmation": "never",
+          "description": "Ejecuta indices.values.getById.",
+          "effect": "read",
+          "generatedBy": "builder-high-confidence",
+          "id": "indices.values.getById",
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "description": "ID del registro.",
+                "ref": {
+                  "resource": "indices.values"
+                },
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "type": "object"
+          },
+          "tenantScope": "required",
+          "title": "Get By ID"
+        },
+        "contractAdoption": {
+          "confidence": "alta",
+          "kind": "automatic",
+          "source": "drizzle"
+        },
+        "contractAuthority": true,
+        "contractDraft": {
+          "confidence": "alta",
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "description": "ID del registro.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "type": "object"
+          },
+          "source": "drizzle"
+        },
+        "description": "Ejecuta indices.values.getById.",
+        "excluded": true,
+        "excludedReason": "Un valor por su id interno. Nadie conoce ni necesita ese id: a un valor de índice se llega por índice y fecha, que es lo que hacen «Serie de un índice» y «Último valor publicado».",
+        "origin": "inferred",
+        "requiredArgs": [
+          "id"
+        ],
+        "resource": "indices.values",
+        "title": "Get By ID"
+      },
+      "prov": {
+        "actionId": "generated",
+        "args": "custom",
+        "argSchemas": "custom",
+        "contract": "user",
+        "contractAdoption": "user",
+        "contractAuthority": "generated",
+        "contractDraft": "user",
+        "description": "generated",
+        "excluded": "user",
+        "excludedReason": "user",
+        "requiredArgs": "custom",
+        "resource": "generated",
+        "title": "generated"
+      }
+    },
+    "q:indices.values.list": {
+      "type": "agentic.query",
+      "groupId": "ph-consultas",
+      "data": {
+        "actionId": "indices.values.list",
+        "argSchemas": {
+          "limit": {
+            "description": "Cantidad de resultados.",
+            "type": "integer"
+          },
+          "offset": {
+            "description": "Resultados a saltear.",
+            "type": "integer"
+          }
+        },
+        "args": [
+          {
+            "description": "Cantidad de resultados.",
+            "label": "limit",
+            "name": "limit",
+            "required": false,
+            "resource": null,
+            "type": "integer"
+          },
+          {
+            "description": "Resultados a saltear.",
+            "label": "offset",
+            "name": "offset",
+            "required": false,
+            "resource": null,
+            "type": "integer"
+          }
+        ],
+        "contract": {
+          "confirmation": "never",
+          "description": "Ejecuta indices.values.list.",
+          "effect": "read",
+          "generatedBy": "builder-high-confidence",
+          "id": "indices.values.list",
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "limit": {
+                "description": "Cantidad de resultados.",
+                "type": "integer"
+              },
+              "offset": {
+                "description": "Resultados a saltear.",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "tenantScope": "required",
+          "title": "List"
+        },
+        "contractAdoption": {
+          "confidence": "alta",
+          "kind": "automatic",
+          "source": "drizzle"
+        },
+        "contractAuthority": true,
+        "contractDraft": {
+          "confidence": "alta",
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "limit": {
+                "description": "Cantidad de resultados.",
+                "type": "integer"
+              },
+              "offset": {
+                "description": "Resultados a saltear.",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "source": "drizzle"
+        },
+        "description": "Ejecuta indices.values.list.",
+        "excluded": true,
+        "excludedReason": "Devuelve TODOS los valores de todos los índices, sin filtro: son miles de filas diarias que no responden ninguna pregunta. Lo que se quiere saber es la serie de un índice entre dos fechas («Serie de un índice») o hasta dónde llegó («Último valor publicado»).",
+        "origin": "inferred",
+        "requiredArgs": [],
+        "resource": "indices.values",
+        "title": "List"
+      },
+      "prov": {
+        "actionId": "generated",
+        "args": "custom",
+        "argSchemas": "custom",
+        "contract": "user",
+        "contractAdoption": "user",
+        "contractAuthority": "generated",
+        "contractDraft": "user",
+        "description": "generated",
+        "excluded": "user",
+        "excludedReason": "user",
+        "requiredArgs": "custom",
+        "resource": "generated",
+        "title": "generated"
+      }
+    },
+    "src:q:indices.fx.convert:amount": {
+      "type": "agentic.agent-input",
+      "groupId": "ph-entradas",
+      "data": {
+        "description": "El importe en la moneda de origen.",
+        "examples": [],
+        "name": "amount",
+        "options": [],
+        "origin": "user",
+        "required": true,
+        "valueType": "string"
+      }
+    },
+    "src:q:indices.values.lastValue:indexCode": {
+      "type": "agentic.agent-input",
+      "groupId": "ph-entradas",
+      "data": {
+        "description": "Qué índice: «ICL», «IPC», «CasaPropia». Va en mayúsculas.",
+        "examples": [],
+        "name": "indexCode",
+        "options": [],
+        "origin": "user",
+        "required": true,
+        "valueType": "string"
+      }
+    },
+    "src:q:indices.values.quote:dateFrom": {
+      "type": "agentic.agent-input",
+      "groupId": "ph-entradas",
+      "data": {
+        "description": "La fecha base: desde cuándo rige el alquiler que se va a actualizar.",
+        "examples": [],
+        "name": "dateFrom",
+        "options": [],
+        "origin": "user",
+        "required": true,
+        "valueType": "string"
+      }
+    },
+    "src:q:indices.values.quote:dateTo": {
+      "type": "agentic.agent-input",
+      "groupId": "ph-entradas",
+      "data": {
+        "description": "La fecha de la actualización.",
+        "examples": [],
+        "name": "dateTo",
+        "options": [],
+        "origin": "user",
+        "required": true,
+        "valueType": "string"
+      }
+    },
+    "src:q:indices.values.quote:indexCode": {
+      "type": "agentic.agent-input",
+      "groupId": "ph-entradas",
+      "data": {
+        "description": "Con qué índice se actualiza, según lo pactado en el contrato: «ICL», «IPC», «CasaPropia». Solo el ICL se baja solo; para los demás los valores tienen que estar cargados.",
+        "examples": [],
+        "name": "indexCode",
+        "options": [],
+        "origin": "user",
+        "required": true,
+        "valueType": "string"
+      }
+    },
+    "src:q:indices.values.quote:previousRent": {
+      "type": "agentic.agent-input",
+      "groupId": "ph-entradas",
+      "data": {
+        "description": "El alquiler vigente, el que se va a multiplicar por el factor.",
+        "examples": [],
+        "name": "previousRent",
+        "options": [],
+        "origin": "user",
+        "required": true,
+        "valueType": "string"
+      }
+    },
+    "src:q:indices.values.series:from": {
+      "type": "agentic.agent-input",
+      "groupId": "ph-entradas",
+      "data": {
+        "description": "Desde qué día, como 2026-01-31.",
+        "examples": [],
+        "name": "from",
+        "options": [],
+        "origin": "user",
+        "required": true,
+        "valueType": "string"
+      }
+    },
+    "src:q:indices.values.series:indexCode": {
+      "type": "agentic.agent-input",
+      "groupId": "ph-entradas",
+      "data": {
+        "description": "Qué índice: «ICL» (el del BCRA, el que usan los alquileres), «IPC», «CasaPropia». Va en mayúsculas.",
+        "examples": [],
+        "name": "indexCode",
+        "options": [],
+        "origin": "user",
+        "required": true,
+        "valueType": "string"
+      }
+    },
+    "src:q:indices.values.series:to": {
+      "type": "agentic.agent-input",
+      "groupId": "ph-entradas",
+      "data": {
+        "description": "Hasta qué día.",
+        "examples": [],
+        "name": "to",
+        "options": [],
+        "origin": "user",
+        "required": true,
+        "valueType": "string"
+      }
+    }
+  },
+  "edges": [
+    {
+      "id": "edge-7j5iqso",
+      "sourceNodeId": "src:q:indices.values.series:indexCode",
+      "sourcePortId": "value",
+      "targetNodeId": "q:indices.values.series",
+      "targetPortId": "arg-0",
+      "data": {
+        "origin": "user"
+      }
+    },
+    {
+      "id": "edge-8n5nwri",
+      "sourceNodeId": "src:q:indices.values.series:from",
+      "sourcePortId": "value",
+      "targetNodeId": "q:indices.values.series",
+      "targetPortId": "arg-1",
+      "data": {
+        "origin": "user"
+      }
+    },
+    {
+      "id": "edge-9yssj7p",
+      "sourceNodeId": "src:q:indices.values.series:to",
+      "sourcePortId": "value",
+      "targetNodeId": "q:indices.values.series",
+      "targetPortId": "arg-2",
+      "data": {
+        "origin": "user"
+      }
+    },
+    {
+      "id": "edge-av0icy2",
+      "sourceNodeId": "src:q:indices.values.lastValue:indexCode",
+      "sourcePortId": "value",
+      "targetNodeId": "q:indices.values.lastValue",
+      "targetPortId": "arg-0",
+      "data": {
+        "origin": "user"
+      }
+    },
+    {
+      "id": "edge-bchvwau",
+      "sourceNodeId": "src:q:indices.values.quote:indexCode",
+      "sourcePortId": "value",
+      "targetNodeId": "q:indices.values.quote",
+      "targetPortId": "arg-0",
+      "data": {
+        "origin": "user"
+      }
+    },
+    {
+      "id": "edge-ctmiyfu",
+      "sourceNodeId": "src:q:indices.values.quote:dateFrom",
+      "sourcePortId": "value",
+      "targetNodeId": "q:indices.values.quote",
+      "targetPortId": "arg-1",
+      "data": {
+        "origin": "user"
+      }
+    },
+    {
+      "id": "edge-dk4j0gt",
+      "sourceNodeId": "src:q:indices.values.quote:dateTo",
+      "sourcePortId": "value",
+      "targetNodeId": "q:indices.values.quote",
+      "targetPortId": "arg-2",
+      "data": {
+        "origin": "user"
+      }
+    },
+    {
+      "id": "edge-e0jiwew",
+      "sourceNodeId": "src:q:indices.values.quote:previousRent",
+      "sourcePortId": "value",
+      "targetNodeId": "q:indices.values.quote",
+      "targetPortId": "arg-3",
+      "data": {
+        "origin": "user"
+      }
+    },
+    {
+      "id": "edge-fwpxmhx",
+      "sourceNodeId": "src:q:indices.fx.convert:amount",
+      "sourcePortId": "value",
+      "targetNodeId": "q:indices.fx.convert",
+      "targetPortId": "arg-0",
+      "data": {
+        "origin": "user"
+      }
+    }
+  ]
+}
