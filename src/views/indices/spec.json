@@ -1,0 +1,185 @@
+{
+  "specVersion": 1,
+  "kind": "blank",
+  "title": "Índices",
+  "data": {
+    "repositoryPrefix": "indices.values"
+  },
+  "blocks": [
+    {
+      "id": "row_head",
+      "kind": "container",
+      "ctype": "columns",
+      "alias": "Encabezado",
+      "cols": [
+        {
+          "fr": 0.62,
+          "children": [
+            {
+              "id": "hdr",
+              "kind": "component",
+              "comp": "PageHeader",
+              "props": {
+                "kicker": "Índices",
+                "title": "Valores de índice",
+                "subtitle": "La serie con la que se actualizan los contratos."
+              }
+            }
+          ]
+        },
+        {
+          "fr": 0.38,
+          "children": [
+            {
+              "id": "btn_nuevo",
+              "kind": "component",
+              "comp": "Button",
+              "align": "right",
+              "props": {
+                "label": "Cargar valor",
+                "variant": "primary",
+                "action": {
+                  "id": "openForm",
+                  "label": "Cargar valor",
+                  "target": "indices.valor-de-indice.open"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "row_kpi",
+      "kind": "container",
+      "ctype": "columns",
+      "alias": "Último valor por índice",
+      "cols": [
+        {
+          "fr": 0.34,
+          "children": [
+            {
+              "id": "k_icl",
+              "kind": "component",
+              "comp": "SummaryCard",
+              "props": {
+                "label": "ICL",
+                "value": "585,40",
+                "sub": "al 01/09/2026",
+                "icon": "Landmark",
+                "tone": "neutral"
+              }
+            }
+          ]
+        },
+        {
+          "fr": 0.33,
+          "children": [
+            {
+              "id": "k_ipc",
+              "kind": "component",
+              "comp": "SummaryCard",
+              "props": {
+                "label": "IPC",
+                "value": "10.744,18",
+                "sub": "al 01/08/2026",
+                "icon": "ShoppingCart",
+                "tone": "neutral"
+              }
+            }
+          ]
+        },
+        {
+          "fr": 0.33,
+          "children": [
+            {
+              "id": "k_casa",
+              "kind": "component",
+              "comp": "SummaryCard",
+              "props": {
+                "label": "Casa Propia",
+                "value": "197,85",
+                "sub": "al 01/08/2026",
+                "icon": "House",
+                "tone": "neutral"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sec_serie",
+      "kind": "container",
+      "ctype": "section",
+      "label": "La serie",
+      "icon": "ChartLine",
+      "children": [
+        {
+          "id": "tbl_valores",
+          "kind": "component",
+          "comp": "DataTable",
+          "props": {
+            "source": "indices.values",
+            "pageSize": "20",
+            "rowAction": {
+              "id": "openForm",
+              "label": "Corregir el valor",
+              "target": "indices.valor-de-indice.open"
+            },
+            "columns": [
+              {
+                "key": "value_date",
+                "label": "Fecha",
+                "format": "date"
+              },
+              {
+                "key": "index_code",
+                "label": "Índice",
+                "display": "pill",
+                "values": [
+                  {
+                    "value": "ICL",
+                    "label": "ICL",
+                    "tone": "neutral",
+                    "icon": "Landmark"
+                  },
+                  {
+                    "value": "IPC",
+                    "label": "IPC",
+                    "tone": "neutral",
+                    "icon": "ShoppingCart"
+                  },
+                  {
+                    "value": "casa_propia",
+                    "label": "Casa Propia",
+                    "tone": "neutral",
+                    "icon": "House"
+                  }
+                ]
+              },
+              {
+                "key": "value",
+                "label": "Valor"
+              },
+              {
+                "key": "source",
+                "label": "De dónde salió",
+                "emptyLabel": "Cargado a mano"
+              }
+            ],
+            "filters": [
+              {
+                "column": "index_code",
+                "label": "Índice",
+                "kind": "select"
+              }
+            ],
+            "emptyTitle": "Todavía no hay valores cargados",
+            "emptySub": "El ICL se baja solo cuando hace falta; el IPC y Casa Propia se cargan acá."
+          }
+        }
+      ]
+    }
+  ]
+}
