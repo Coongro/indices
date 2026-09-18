@@ -16,6 +16,11 @@ export const ICL_SOURCE = {
   manual: 'manual',
 } as const;
 
+export const FX_SOURCE = {
+  dolarapi: 'dolarapi',
+  manual: 'manual',
+} as const;
+
 export const ADJUSTMENTS_DETECTION = {
   manual: 'manual',
   daily: 'daily',
@@ -24,6 +29,7 @@ export const ADJUSTMENTS_DETECTION = {
 /** Tipo de cada setting por su key punteada (para getSetting). */
 export interface IndicesSettingsByKey {
   'indices.icl.source': 'bcra' | 'manual';
+  'indices.fx.source': 'dolarapi' | 'manual';
   'indices.adjustments.detection': 'manual' | 'daily';
 }
 
@@ -31,6 +37,8 @@ export interface IndicesSettingsByKey {
 export interface IndicesSettings {
   /** Serie del ICL — «BCRA» baja la serie diaria del organismo cuando hace falta calcular una actualización. «Manual» la desactiva: los valores los cargás vos, y una actualización sin el valor cargado no se calcula. Sirve si trabajás sin internet o si preferís controlar cada número. · `indices.icl.source` · default: `"bcra"` */
   readonly iclSource: 'bcra' | 'manual';
+  /** Cotización del dólar — «Automática» busca la cotización del día cuando hay que emitir un cargo de un contrato en dólares, y la guarda. «A mano» la desactiva: se usa únicamente lo que esté cargado en Índices, y un cargo sin la cotización del día no se emite en vez de usar una vieja. Elegila a mano si trabajás sin internet o si pactaste con los propietarios un dólar que no es el que publica el mercado. · `indices.fx.source` · default: `"dolarapi"` */
+  readonly fxSource: 'dolarapi' | 'manual';
   /** Cuándo buscar contratos a actualizar — «A mano»: buscás vos desde Actualizaciones. «Diaria»: el sistema revisa todos los días y deja las propuestas esperando. En los dos casos el alquiler cambia solo cuando vos confirmás — nunca se aplica solo. · `indices.adjustments.detection` · default: `"manual"` */
   readonly adjustmentsDetection: 'manual' | 'daily';
 }
@@ -38,12 +46,14 @@ export interface IndicesSettings {
 /** Nombre de prop → key punteada del manifest. */
 export const SETTING_KEYS = {
   iclSource: 'indices.icl.source',
+  fxSource: 'indices.fx.source',
   adjustmentsDetection: 'indices.adjustments.detection',
 } as const;
 
 /** Valores por defecto (los mismos del manifest). */
 export const SETTING_DEFAULTS = {
   'indices.icl.source': 'bcra',
+  'indices.fx.source': 'dolarapi',
   'indices.adjustments.detection': 'manual',
 } as const;
 
@@ -52,6 +62,8 @@ const COERCE: {
 } = {
   'indices.icl.source': (values) =>
     toEnum(values['indices.icl.source'], ['bcra', 'manual'], 'bcra'),
+  'indices.fx.source': (values) =>
+    toEnum(values['indices.fx.source'], ['dolarapi', 'manual'], 'dolarapi'),
   'indices.adjustments.detection': (values) =>
     toEnum(values['indices.adjustments.detection'], ['manual', 'daily'], 'manual'),
 };
@@ -68,6 +80,7 @@ export function getSetting<K extends keyof IndicesSettingsByKey>(
 export function readIndicesSettings(values: Record<string, unknown>): IndicesSettings {
   return {
     iclSource: COERCE['indices.icl.source'](values),
+    fxSource: COERCE['indices.fx.source'](values),
     adjustmentsDetection: COERCE['indices.adjustments.detection'](values),
   };
 }

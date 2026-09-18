@@ -4,7 +4,10 @@
   "apiVersion": "2.0",
   "displayName": "Índices",
   "assets": {
-    "styles": ["./dist/assets/tailwind.css", "./dist/assets/fontawesome/css/all.min.css"]
+    "styles": [
+      "./dist/assets/tailwind.css",
+      "./dist/assets/fontawesome/css/all.min.css"
+    ]
   },
   "contributes": {
     "menus": [
@@ -49,7 +52,11 @@
         "module": "./dist/repositories/fx-rate.repository.js",
         "export": "FxRateRepository",
         "prefix": "indices.fx",
-        "actions": ["houses", "rate", "convert"]
+        "actions": [
+          "houses",
+          "rate",
+          "convert"
+        ]
       }
     ],
     "settings": {
@@ -92,7 +99,29 @@
                   "label": "Cargarla a mano"
                 }
               ],
-              "tags": ["indices", "icl", "source", "serie"]
+              "tags": [
+                "indices",
+                "icl",
+                "source",
+                "serie"
+              ]
+            },
+            {
+              "key": "indices.fx.source",
+              "type": "enum",
+              "label": "Cotización del dólar",
+              "description": "«Automática» busca la cotización del día cuando hay que emitir un cargo de un contrato en dólares, y la guarda. «A mano» la desactiva: se usa únicamente lo que esté cargado en Índices, y un cargo sin la cotización del día no se emite en vez de usar una vieja. Elegila a mano si trabajás sin internet o si pactaste con los propietarios un dólar que no es el que publica el mercado.",
+              "default": "dolarapi",
+              "options": [
+                {
+                  "value": "dolarapi",
+                  "label": "Buscarla automáticamente"
+                },
+                {
+                  "value": "manual",
+                  "label": "Cargarla a mano"
+                }
+              ]
             }
           ]
         },
@@ -162,7 +191,9 @@
               "description": "Qué cotización usar, según lo pactado. Si se omite, la oficial."
             }
           },
-          "required": ["amount"],
+          "required": [
+            "amount"
+          ],
           "additionalProperties": false
         },
         "output": {
@@ -255,7 +286,9 @@
               "description": "Qué índice: «ICL», «IPC», «CasaPropia». Va en mayúsculas."
             }
           },
-          "required": ["indexCode"],
+          "required": [
+            "indexCode"
+          ],
           "additionalProperties": false
         },
         "output": {
@@ -322,7 +355,12 @@
               "description": "El alquiler vigente, el que se va a multiplicar por el factor."
             }
           },
-          "required": ["indexCode", "dateFrom", "dateTo", "previousRent"],
+          "required": [
+            "indexCode",
+            "dateFrom",
+            "dateTo",
+            "previousRent"
+          ],
           "additionalProperties": false
         },
         "output": {
@@ -454,7 +492,11 @@
               "description": "Hasta qué día."
             }
           },
-          "required": ["indexCode", "from", "to"],
+          "required": [
+            "indexCode",
+            "from",
+            "to"
+          ],
           "additionalProperties": false
         },
         "output": {

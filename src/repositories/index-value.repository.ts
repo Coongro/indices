@@ -7,6 +7,7 @@ import { fetchSeries, ICL_VARIABLE, type DateKey, type SeriesPoint } from '../se
 import { applyFactor, calcFactor, type AdjustmentFactor } from '../services/factor.js';
 import { fetchIpcSeries } from '../services/indec.js';
 import { minusDays } from '../services/range.js';
+import { currentSourcePolicy } from '../services/sources.server.js';
 
 /**
  * Los índices que el sistema sabe ir a buscar solo, y de dónde.
@@ -162,7 +163,13 @@ export class IndexValueRepository {
       // con el primer día del mes, así que una fecha base del 15 necesita el punto del
       // día 1 — o del mes anterior, si el mes todavía no se publicó.
       const fuente = AUTOMATICAS[indexCode];
-      if (!fuente) {
+      // «Cargarla a mano» apaga la descarga: quien la eligió quiere controlar cada
+      // número, o trabaja sin internet. Se lee acá y no en la pantalla porque el que
+      // calcula puede ser un agente, sin nadie que mire la configuración por él.
+      const politica = await currentSourcePolicy(this.db);
+      const automatica = Boolean(fuente) && (indexCode !== 'ICL' || politica.icl === 'bcra');
+
+      if (!automatica) {
         throw new Error(
           `No hay valores cargados del índice ${indexCode} entre ${dateFrom} y ${dateTo}. ` +
             `Cargalos a mano desde Índices o esperá a que se publiquen.`
