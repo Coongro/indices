@@ -90,6 +90,51 @@ export function ValorDeIndiceView() {
                       icon: h(UI.DynamicIcon, { icon: 'House', size: 16 }),
                     },
                     'Casa Propia'
+                  ),
+                  h(
+                    UI.SelectItem,
+                    {
+                      key: 'USD_OFICIAL',
+                      value: 'USD_OFICIAL',
+                      icon: h(UI.DynamicIcon, { icon: 'DollarSign', size: 16 }),
+                    },
+                    'Dólar oficial'
+                  ),
+                  h(
+                    UI.SelectItem,
+                    {
+                      key: 'USD_BLUE',
+                      value: 'USD_BLUE',
+                      icon: h(UI.DynamicIcon, { icon: 'DollarSign', size: 16 }),
+                    },
+                    'Dólar blue'
+                  ),
+                  h(
+                    UI.SelectItem,
+                    {
+                      key: 'USD_BOLSA',
+                      value: 'USD_BOLSA',
+                      icon: h(UI.DynamicIcon, { icon: 'DollarSign', size: 16 }),
+                    },
+                    'Dólar MEP'
+                  ),
+                  h(
+                    UI.SelectItem,
+                    {
+                      key: 'USD_CONTADOCONLIQUI',
+                      value: 'USD_CONTADOCONLIQUI',
+                      icon: h(UI.DynamicIcon, { icon: 'DollarSign', size: 16 }),
+                    },
+                    'Contado con liqui'
+                  ),
+                  h(
+                    UI.SelectItem,
+                    {
+                      key: 'USD_MAYORISTA',
+                      value: 'USD_MAYORISTA',
+                      icon: h(UI.DynamicIcon, { icon: 'DollarSign', size: 16 }),
+                    },
+                    'Dólar mayorista'
                   )
                 ),
                 errors['index_code']
@@ -176,13 +221,51 @@ export function ValorDeIndiceView() {
                   { htmlFor: 'source', style: { display: 'block', marginBottom: '6px' } },
                   'De dónde salió'
                 ),
-                h(UI.Input, {
-                  id: 'source',
-                  type: 'text',
-                  value: String(values['source'] ?? ''),
-                  placeholder: 'Ej: BCRA',
-                  onChange: (e: any) => setField('source', e.target.value),
-                }),
+                h(
+                  UI.Select,
+                  {
+                    value: String(values['source'] ?? ''),
+                    onValueChange: (v: string) => setField('source', v),
+                    placeholder: 'Elegir…',
+                    clearable: true,
+                  },
+                  h(
+                    UI.SelectItem,
+                    {
+                      key: 'bcra',
+                      value: 'bcra',
+                      icon: h(UI.DynamicIcon, { icon: 'Landmark', size: 16 }),
+                    },
+                    'BCRA'
+                  ),
+                  h(
+                    UI.SelectItem,
+                    {
+                      key: 'indec',
+                      value: 'indec',
+                      icon: h(UI.DynamicIcon, { icon: 'ChartNoAxesColumn', size: 16 }),
+                    },
+                    'INDEC'
+                  ),
+                  h(
+                    UI.SelectItem,
+                    {
+                      key: 'dolarapi',
+                      value: 'dolarapi',
+                      icon: h(UI.DynamicIcon, { icon: 'DollarSign', size: 16 }),
+                    },
+                    'Cotización del día'
+                  ),
+                  h(
+                    UI.SelectItem,
+                    {
+                      key: 'manual',
+                      value: 'manual',
+                      icon: h(UI.DynamicIcon, { icon: 'PenLine', size: 16 }),
+                    },
+                    'Cargado a mano'
+                  )
+                ),
                 errors['source']
                   ? h(
                       'div',

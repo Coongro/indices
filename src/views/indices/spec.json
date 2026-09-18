@@ -22,7 +22,7 @@
               "props": {
                 "kicker": "Índices",
                 "title": "Valores de índice",
-                "subtitle": "La serie con la que se actualizan los contratos."
+                "subtitle": "Las series con las que se actualizan los contratos, y las cotizaciones del dólar."
               }
             }
           ]
@@ -155,6 +155,36 @@
                     "label": "Casa Propia",
                     "tone": "neutral",
                     "icon": "House"
+                  },
+                  {
+                    "value": "USD_OFICIAL",
+                    "label": "Dólar oficial",
+                    "tone": "outline",
+                    "icon": "DollarSign"
+                  },
+                  {
+                    "value": "USD_BLUE",
+                    "label": "Dólar blue",
+                    "tone": "outline",
+                    "icon": "DollarSign"
+                  },
+                  {
+                    "value": "USD_BOLSA",
+                    "label": "Dólar MEP",
+                    "tone": "outline",
+                    "icon": "DollarSign"
+                  },
+                  {
+                    "value": "USD_CONTADOCONLIQUI",
+                    "label": "Contado con liqui",
+                    "tone": "outline",
+                    "icon": "DollarSign"
+                  },
+                  {
+                    "value": "USD_MAYORISTA",
+                    "label": "Dólar mayorista",
+                    "tone": "outline",
+                    "icon": "DollarSign"
                   }
                 ]
               },
@@ -165,7 +195,29 @@
               {
                 "key": "source",
                 "label": "De dónde salió",
-                "emptyLabel": "Cargado a mano"
+                "emptyLabel": "Cargado a mano",
+                "display": "pill",
+                "values": [
+                  {
+                    "value": "bcra",
+                    "label": "BCRA",
+                    "tone": "neutral",
+                    "icon": "Landmark"
+                  },
+                  {
+                    "value": "indec",
+                    "label": "INDEC",
+                    "tone": "neutral",
+                    "icon": "ChartNoAxesColumn"
+                  },
+                  {
+                    "value": "dolarapi",
+                    "label": "Cotización del día",
+                    "tone": "neutral",
+                    "icon": "DollarSign"
+                  }
+                ],
+                "emptyIcon": "PenLine"
               }
             ],
             "filters": [

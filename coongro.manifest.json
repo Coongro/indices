@@ -7,7 +7,13 @@
     "styles": ["./dist/assets/tailwind.css", "./dist/assets/fontawesome/css/all.min.css"]
   },
   "contributes": {
-    "menus": [{ "path": "Índices", "viewId": "indices.indices.open" }],
+    "menus": [
+      {
+        "path": "Índices",
+        "viewId": "indices.indices.open",
+        "icon": "TrendingUp"
+      }
+    ],
     "views": [
       {
         "id": "indices.valor-de-indice.open",
@@ -47,7 +53,13 @@
       }
     ],
     "settings": {
-      "groups": [{ "id": "indices", "label": "indices", "order": 50 }],
+      "groups": [
+        {
+          "id": "indices",
+          "label": "indices",
+          "order": 50
+        }
+      ],
       "pages": [
         {
           "id": "indices.series",
@@ -71,8 +83,14 @@
               "description": "«BCRA» baja la serie diaria del organismo cuando hace falta calcular una actualización. «Manual» la desactiva: los valores los cargás vos, y una actualización sin el valor cargado no se calcula. Sirve si trabajás sin internet o si preferís controlar cada número.",
               "default": "bcra",
               "options": [
-                { "value": "bcra", "label": "Bajarla del BCRA" },
-                { "value": "manual", "label": "Cargarla a mano" }
+                {
+                  "value": "bcra",
+                  "label": "Bajarla del BCRA"
+                },
+                {
+                  "value": "manual",
+                  "label": "Cargarla a mano"
+                }
               ],
               "tags": ["indices", "icl", "source", "serie"]
             }
@@ -91,8 +109,14 @@
               "description": "«A mano»: buscás vos desde Actualizaciones. «Diaria»: el sistema revisa todos los días y deja las propuestas esperando. En los dos casos el alquiler cambia solo cuando vos confirmás — nunca se aplica solo.",
               "default": "manual",
               "options": [
-                { "value": "manual", "label": "A mano" },
-                { "value": "daily", "label": "Revisar todos los días" }
+                {
+                  "value": "manual",
+                  "label": "A mano"
+                },
+                {
+                  "value": "daily",
+                  "label": "Revisar todos los días"
+                }
               ],
               "tags": [
                 "indices",

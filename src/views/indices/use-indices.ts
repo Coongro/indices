@@ -147,10 +147,31 @@ export function useIndicesView() {
         { value: 'ICL', label: 'ICL', tone: 'neutral', icon: 'Landmark' },
         { value: 'IPC', label: 'IPC', tone: 'neutral', icon: 'ShoppingCart' },
         { value: 'casa_propia', label: 'Casa Propia', tone: 'neutral', icon: 'House' },
+        { value: 'USD_OFICIAL', label: 'Dólar oficial', tone: 'outline', icon: 'DollarSign' },
+        { value: 'USD_BLUE', label: 'Dólar blue', tone: 'outline', icon: 'DollarSign' },
+        { value: 'USD_BOLSA', label: 'Dólar MEP', tone: 'outline', icon: 'DollarSign' },
+        {
+          value: 'USD_CONTADOCONLIQUI',
+          label: 'Contado con liqui',
+          tone: 'outline',
+          icon: 'DollarSign',
+        },
+        { value: 'USD_MAYORISTA', label: 'Dólar mayorista', tone: 'outline', icon: 'DollarSign' },
       ],
     },
     { key: 'value', label: 'Valor' },
-    { key: 'source', label: 'De dónde salió', emptyLabel: 'Cargado a mano' },
+    {
+      key: 'source',
+      label: 'De dónde salió',
+      display: 'pill',
+      values: [
+        { value: 'bcra', label: 'BCRA', tone: 'neutral', icon: 'Landmark' },
+        { value: 'indec', label: 'INDEC', tone: 'neutral', icon: 'ChartNoAxesColumn' },
+        { value: 'dolarapi', label: 'Cotización del día', tone: 'neutral', icon: 'DollarSign' },
+      ],
+      emptyLabel: 'Cargado a mano',
+      emptyIcon: 'PenLine',
+    },
   ];
   const cellValue = (
     row: any,

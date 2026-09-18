@@ -37,6 +37,31 @@
               "value": "casa_propia",
               "label": "Casa Propia",
               "icon": "House"
+            },
+            {
+              "value": "USD_OFICIAL",
+              "label": "Dólar oficial",
+              "icon": "DollarSign"
+            },
+            {
+              "value": "USD_BLUE",
+              "label": "Dólar blue",
+              "icon": "DollarSign"
+            },
+            {
+              "value": "USD_BOLSA",
+              "label": "Dólar MEP",
+              "icon": "DollarSign"
+            },
+            {
+              "value": "USD_CONTADOCONLIQUI",
+              "label": "Contado con liqui",
+              "icon": "DollarSign"
+            },
+            {
+              "value": "USD_MAYORISTA",
+              "label": "Dólar mayorista",
+              "icon": "DollarSign"
             }
           ]
         },
@@ -67,10 +92,31 @@
           "id": "f_source",
           "kind": "field",
           "name": "source",
-          "fieldType": "text",
+          "fieldType": "enum",
           "label": "De dónde salió",
           "validations": [],
-          "placeholder": "Ej: BCRA"
+          "options": [
+            {
+              "value": "bcra",
+              "label": "BCRA",
+              "icon": "Landmark"
+            },
+            {
+              "value": "indec",
+              "label": "INDEC",
+              "icon": "ChartNoAxesColumn"
+            },
+            {
+              "value": "dolarapi",
+              "label": "Cotización del día",
+              "icon": "DollarSign"
+            },
+            {
+              "value": "manual",
+              "label": "Cargado a mano",
+              "icon": "PenLine"
+            }
+          ]
         }
       ]
     }

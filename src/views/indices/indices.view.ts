@@ -374,7 +374,8 @@ export function IndicesView() {
                 ),
                 h(UI.PageHeader, {
                   title: 'Valores de índice',
-                  subtitle: 'La serie con la que se actualizan los contratos.',
+                  subtitle:
+                    'Las series con las que se actualizan los contratos, y las cotizaciones del dólar.',
                 })
               )
             )
