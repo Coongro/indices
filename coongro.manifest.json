@@ -4,14 +4,30 @@
   "apiVersion": "2.0",
   "displayName": "Índices",
   "assets": {
-    "styles": [
-      "./dist/assets/tailwind.css",
-      "./dist/assets/fontawesome/css/all.min.css"
-    ]
+    "styles": ["./dist/assets/tailwind.css", "./dist/assets/fontawesome/css/all.min.css"]
   },
   "contributes": {
-    "menus": [],
-    "views": [],
+    "menus": [
+      {
+        "path": "Índices",
+        "viewId": "indices.indices.open",
+        "icon": "TrendingUp"
+      }
+    ],
+    "views": [
+      {
+        "id": "indices.valor-de-indice.open",
+        "title": "Valor de índice",
+        "component": "./dist/views/valor-de-indice/index.js",
+        "export": "ValorDeIndiceView"
+      },
+      {
+        "id": "indices.indices.open",
+        "title": "Índices",
+        "component": "./dist/views/indices/index.js",
+        "export": "IndicesView"
+      }
+    ],
     "repositories": [
       {
         "module": "./dist/repositories/index-value.repository.js",
@@ -33,11 +49,7 @@
         "module": "./dist/repositories/fx-rate.repository.js",
         "export": "FxRateRepository",
         "prefix": "indices.fx",
-        "actions": [
-          "houses",
-          "rate",
-          "convert"
-        ]
+        "actions": ["houses", "rate", "convert"]
       }
     ],
     "settings": {
@@ -80,45 +92,23 @@
                   "label": "Cargarla a mano"
                 }
               ],
-              "tags": [
-                "indices",
-                "icl",
-                "source",
-                "serie"
-              ]
-            }
-          ]
-        },
-        {
-          "id": "indices.series.deteccion-de-actualizaciones",
-          "page": "indices.series",
-          "label": "Detección de actualizaciones",
-          "order": 20,
-          "items": [
+              "tags": ["indices", "icl", "source", "serie"]
+            },
             {
-              "key": "indices.adjustments.detection",
+              "key": "indices.fx.source",
               "type": "enum",
-              "label": "Cuándo buscar contratos a actualizar",
-              "description": "«A mano»: buscás vos desde Actualizaciones. «Diaria»: el sistema revisa todos los días y deja las propuestas esperando. En los dos casos el alquiler cambia solo cuando vos confirmás — nunca se aplica solo.",
-              "default": "manual",
+              "label": "Cotización del dólar",
+              "description": "«Automática» busca la cotización del día cuando hay que emitir un cargo de un contrato en dólares, y la guarda. «A mano» la desactiva: se usa únicamente lo que esté cargado en Índices, y un cargo sin la cotización del día no se emite en vez de usar una vieja. Elegila a mano si trabajás sin internet o si pactaste con los propietarios un dólar que no es el que publica el mercado.",
+              "default": "dolarapi",
               "options": [
                 {
-                  "value": "manual",
-                  "label": "A mano"
+                  "value": "dolarapi",
+                  "label": "Buscarla automáticamente"
                 },
                 {
-                  "value": "daily",
-                  "label": "Revisar todos los días"
+                  "value": "manual",
+                  "label": "Cargarla a mano"
                 }
-              ],
-              "tags": [
-                "indices",
-                "adjustments",
-                "detection",
-                "cuándo",
-                "buscar",
-                "contratos",
-                "actualizar"
               ]
             }
           ]
@@ -155,9 +145,7 @@
               "description": "Qué cotización usar, según lo pactado. Si se omite, la oficial."
             }
           },
-          "required": [
-            "amount"
-          ],
+          "required": ["amount"],
           "additionalProperties": false
         },
         "output": {
@@ -250,9 +238,7 @@
               "description": "Qué índice: «ICL», «IPC», «CasaPropia». Va en mayúsculas."
             }
           },
-          "required": [
-            "indexCode"
-          ],
+          "required": ["indexCode"],
           "additionalProperties": false
         },
         "output": {
@@ -319,12 +305,7 @@
               "description": "El alquiler vigente, el que se va a multiplicar por el factor."
             }
           },
-          "required": [
-            "indexCode",
-            "dateFrom",
-            "dateTo",
-            "previousRent"
-          ],
+          "required": ["indexCode", "dateFrom", "dateTo", "previousRent"],
           "additionalProperties": false
         },
         "output": {
@@ -456,11 +437,7 @@
               "description": "Hasta qué día."
             }
           },
-          "required": [
-            "indexCode",
-            "from",
-            "to"
-          ],
+          "required": ["indexCode", "from", "to"],
           "additionalProperties": false
         },
         "output": {

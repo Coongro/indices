@@ -3,9 +3,44 @@ import { and, asc, eq, gte, lte, sql } from 'drizzle-orm';
 
 import { indexValueTable } from '../schema/index-value.js';
 import type { IndexValueRow, NewIndexValueRow } from '../schema/index-value.js';
-import { fetchSeries, ICL_VARIABLE } from '../services/bcra.js';
+import { fetchSeries, ICL_VARIABLE, type DateKey, type SeriesPoint } from '../services/bcra.js';
 import { applyFactor, calcFactor, type AdjustmentFactor } from '../services/factor.js';
+import { fetchIpcSeries } from '../services/indec.js';
 import { minusDays } from '../services/range.js';
+import { normalizeSource } from '../services/source-name.js';
+import { currentSourcePolicy } from '../services/sources.server.js';
+
+/**
+ * Los índices que el sistema sabe ir a buscar solo, y de dónde.
+ *
+ * Estaba cableado a un `if (indexCode !== 'ICL')`: cualquier otro índice fallaba con
+ * «cargalos a mano» aunque su organismo lo publique. Declarándolo como una tabla, sumar
+ * una fuente nueva es agregar una fila — y el que no está acá sigue siendo manual, que
+ * es lo correcto para Casa Propia: ese coeficiente se publica como tabla, no como serie.
+ *
+ * `margenDias` es cuánto antes de la fecha base hay que pedir para que el «último valor
+ * vigente» exista: pocos días alcanzan para un índice diario que no corre fines de
+ * semana, pero uno mensual necesita llegar al mes anterior.
+ */
+const AUTOMATICAS: Record<
+  string,
+  {
+    source: string;
+    margenDias: number;
+    traer: (from: DateKey, to: DateKey) => Promise<SeriesPoint[]>;
+  }
+> = {
+  ICL: {
+    source: 'bcra',
+    margenDias: 10,
+    traer: (from, to) => fetchSeries({ variable: ICL_VARIABLE, from, to }),
+  },
+  IPC: {
+    source: 'indec',
+    margenDias: 70,
+    traer: (from, to) => fetchIpcSeries({ from, to }),
+  },
+};
 
 export class IndexValueRepository {
   constructor(private readonly db: ModuleDatabaseAPI) {}
@@ -70,11 +105,12 @@ export class IndexValueRepository {
     points: Array<{ date: string; value: number | string }>;
   }): Promise<number> {
     if (points.length === 0) return 0;
+    const fuente = normalizeSource(source);
     const rows = points.map((p) => ({
       index_code: indexCode,
       value_date: p.date,
       value: String(p.value),
-      source,
+      source: fuente,
     })) as unknown as NewIndexValueRow[];
 
     await this.db.ormQuery((tx) =>
@@ -124,21 +160,27 @@ export class IndexValueRepository {
       series[series.length - 1].value_date >= dateTo;
 
     if (!cubre) {
-      if (indexCode !== 'ICL') {
+      // Se pide desde bastante antes de la fecha base: el ICL es diario y un domingo o
+      // feriado arrastra el valor del día hábil anterior; el IPC es MENSUAL y se publica
+      // con el primer día del mes, así que una fecha base del 15 necesita el punto del
+      // día 1 — o del mes anterior, si el mes todavía no se publicó.
+      const fuente = AUTOMATICAS[indexCode];
+      // «Cargarla a mano» apaga la descarga: quien la eligió quiere controlar cada
+      // número, o trabaja sin internet. Se lee acá y no en la pantalla porque el que
+      // calcula puede ser un agente, sin nadie que mire la configuración por él.
+      const politica = await currentSourcePolicy(this.db);
+      const automatica = Boolean(fuente) && (indexCode !== 'ICL' || politica.icl === 'bcra');
+
+      if (!automatica) {
         throw new Error(
           `No hay valores cargados del índice ${indexCode} entre ${dateFrom} y ${dateTo}. ` +
-            `Cargalos a mano o esperá a que se publiquen.`
+            `Cargalos a mano desde Índices o esperá a que se publiquen.`
         );
       }
-      // Se pide desde unos días antes: si la fecha base cae domingo o feriado, el
-      // valor vigente es el del día hábil anterior.
-      const desde = minusDays(dateFrom, 10);
-      const points = await fetchSeries({
-        variable: ICL_VARIABLE,
-        from: desde,
-        to: dateTo,
-      });
-      await this.upsertMany({ indexCode: 'ICL', source: 'bcra', points });
+
+      const desde = minusDays(dateFrom, fuente.margenDias);
+      const points = await fuente.traer(desde, dateTo);
+      await this.upsertMany({ indexCode, source: fuente.source, points });
       series = await this.series({ indexCode, from: desde, to: dateTo });
     }
 
@@ -159,7 +201,10 @@ export class IndexValueRepository {
   }
 
   async create({ data }: { data: NewIndexValueRow }): Promise<IndexValueRow[]> {
-    return this.db.ormQuery((tx) => tx.insert(indexValueTable).values(data).returning());
+    // La fuente se guarda en su forma canónica venga de donde venga: de la pantalla,
+    // del Copilot o de una carga por API. Ver `normalizeSource`.
+    const fila = { ...data, source: normalizeSource((data as { source?: unknown }).source) };
+    return this.db.ormQuery((tx) => tx.insert(indexValueTable).values(fila).returning());
   }
 
   async update({
@@ -169,8 +214,12 @@ export class IndexValueRepository {
     id: string;
     data: Partial<NewIndexValueRow>;
   }): Promise<IndexValueRow[]> {
+    const cambios =
+      'source' in data
+        ? { ...data, source: normalizeSource((data as { source?: unknown }).source) }
+        : data;
     return this.db.ormQuery((tx) =>
-      tx.update(indexValueTable).set(data).where(eq(indexValueTable.id, id)).returning()
+      tx.update(indexValueTable).set(cambios).where(eq(indexValueTable.id, id)).returning()
     );
   }
 

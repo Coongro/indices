@@ -1,0 +1,129 @@
+{
+  "specVersion": 1,
+  "kind": "form",
+  "title": "Valor de índice",
+  "data": {
+    "repositoryPrefix": "indices.values"
+  },
+  "blocks": [
+    {
+      "id": "s1",
+      "kind": "container",
+      "ctype": "card",
+      "label": "El valor",
+      "icon": "TrendingUp",
+      "children": [
+        {
+          "id": "f_code",
+          "kind": "field",
+          "name": "index_code",
+          "fieldType": "enum",
+          "label": "Índice",
+          "validations": [
+            "required"
+          ],
+          "options": [
+            {
+              "value": "ICL",
+              "label": "ICL · Contratos de locación",
+              "icon": "Landmark"
+            },
+            {
+              "value": "IPC",
+              "label": "IPC · Precios al consumidor",
+              "icon": "ShoppingCart"
+            },
+            {
+              "value": "casa_propia",
+              "label": "Casa Propia",
+              "icon": "House"
+            },
+            {
+              "value": "USD_OFICIAL",
+              "label": "Dólar oficial",
+              "icon": "DollarSign"
+            },
+            {
+              "value": "USD_BLUE",
+              "label": "Dólar blue",
+              "icon": "DollarSign"
+            },
+            {
+              "value": "USD_BOLSA",
+              "label": "Dólar MEP",
+              "icon": "DollarSign"
+            },
+            {
+              "value": "USD_CONTADOCONLIQUI",
+              "label": "Contado con liqui",
+              "icon": "DollarSign"
+            },
+            {
+              "value": "USD_MAYORISTA",
+              "label": "Dólar mayorista",
+              "icon": "DollarSign"
+            }
+          ]
+        },
+        {
+          "id": "f_date",
+          "kind": "field",
+          "name": "value_date",
+          "fieldType": "date",
+          "label": "Fecha del valor",
+          "width": "half",
+          "validations": [
+            "required"
+          ]
+        },
+        {
+          "id": "f_value",
+          "kind": "field",
+          "name": "value",
+          "fieldType": "number",
+          "label": "Valor",
+          "width": "half",
+          "validations": [
+            "required"
+          ],
+          "placeholder": "Ej: 585,40"
+        },
+        {
+          "id": "f_source",
+          "kind": "field",
+          "name": "source",
+          "fieldType": "enum",
+          "label": "De dónde salió",
+          "validations": [],
+          "options": [
+            {
+              "value": "bcra",
+              "label": "BCRA",
+              "icon": "Landmark"
+            },
+            {
+              "value": "indec",
+              "label": "INDEC",
+              "icon": "ChartNoAxesColumn"
+            },
+            {
+              "value": "dolarapi",
+              "label": "Cotización del día",
+              "icon": "DollarSign"
+            },
+            {
+              "value": "minieco",
+              "label": "Ministerio de Economía",
+              "icon": "Landmark"
+            },
+            {
+              "value": "manual",
+              "label": "Cargado a mano",
+              "icon": "PenLine"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
