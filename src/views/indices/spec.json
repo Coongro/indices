@@ -215,6 +215,11 @@
                     "label": "Cotización del día",
                     "tone": "neutral",
                     "icon": "DollarSign"
+                  },
+                  {
+                    "value": "minieco",
+                    "label": "Ministerio de Economía",
+                    "icon": "Landmark"
                   }
                 ],
                 "emptyIcon": "PenLine"

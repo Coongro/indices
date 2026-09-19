@@ -168,6 +168,7 @@ export function useIndicesView() {
         { value: 'bcra', label: 'BCRA', tone: 'neutral', icon: 'Landmark' },
         { value: 'indec', label: 'INDEC', tone: 'neutral', icon: 'ChartNoAxesColumn' },
         { value: 'dolarapi', label: 'Cotización del día', tone: 'neutral', icon: 'DollarSign' },
+        { value: 'minieco', label: 'Ministerio de Economía', icon: 'Landmark' },
       ],
       emptyLabel: 'Cargado a mano',
       emptyIcon: 'PenLine',

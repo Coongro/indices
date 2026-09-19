@@ -112,6 +112,11 @@
               "icon": "DollarSign"
             },
             {
+              "value": "minieco",
+              "label": "Ministerio de Economía",
+              "icon": "Landmark"
+            },
+            {
               "value": "manual",
               "label": "Cargado a mano",
               "icon": "PenLine"

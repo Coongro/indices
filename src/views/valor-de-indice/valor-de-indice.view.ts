@@ -259,6 +259,15 @@ export function ValorDeIndiceView() {
                   h(
                     UI.SelectItem,
                     {
+                      key: 'minieco',
+                      value: 'minieco',
+                      icon: h(UI.DynamicIcon, { icon: 'Landmark', size: 16 }),
+                    },
+                    'Ministerio de Economía'
+                  ),
+                  h(
+                    UI.SelectItem,
+                    {
                       key: 'manual',
                       value: 'manual',
                       icon: h(UI.DynamicIcon, { icon: 'PenLine', size: 16 }),

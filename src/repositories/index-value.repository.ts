@@ -7,6 +7,7 @@ import { fetchSeries, ICL_VARIABLE, type DateKey, type SeriesPoint } from '../se
 import { applyFactor, calcFactor, type AdjustmentFactor } from '../services/factor.js';
 import { fetchIpcSeries } from '../services/indec.js';
 import { minusDays } from '../services/range.js';
+import { normalizeSource } from '../services/source-name.js';
 import { currentSourcePolicy } from '../services/sources.server.js';
 
 /**
@@ -104,11 +105,12 @@ export class IndexValueRepository {
     points: Array<{ date: string; value: number | string }>;
   }): Promise<number> {
     if (points.length === 0) return 0;
+    const fuente = normalizeSource(source);
     const rows = points.map((p) => ({
       index_code: indexCode,
       value_date: p.date,
       value: String(p.value),
-      source,
+      source: fuente,
     })) as unknown as NewIndexValueRow[];
 
     await this.db.ormQuery((tx) =>
@@ -199,7 +201,10 @@ export class IndexValueRepository {
   }
 
   async create({ data }: { data: NewIndexValueRow }): Promise<IndexValueRow[]> {
-    return this.db.ormQuery((tx) => tx.insert(indexValueTable).values(data).returning());
+    // La fuente se guarda en su forma canónica venga de donde venga: de la pantalla,
+    // del Copilot o de una carga por API. Ver `normalizeSource`.
+    const fila = { ...data, source: normalizeSource((data as { source?: unknown }).source) };
+    return this.db.ormQuery((tx) => tx.insert(indexValueTable).values(fila).returning());
   }
 
   async update({
@@ -209,8 +214,12 @@ export class IndexValueRepository {
     id: string;
     data: Partial<NewIndexValueRow>;
   }): Promise<IndexValueRow[]> {
+    const cambios =
+      'source' in data
+        ? { ...data, source: normalizeSource((data as { source?: unknown }).source) }
+        : data;
     return this.db.ormQuery((tx) =>
-      tx.update(indexValueTable).set(data).where(eq(indexValueTable.id, id)).returning()
+      tx.update(indexValueTable).set(cambios).where(eq(indexValueTable.id, id)).returning()
     );
   }
 
