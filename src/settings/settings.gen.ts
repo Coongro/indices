@@ -21,16 +21,10 @@ export const FX_SOURCE = {
   manual: 'manual',
 } as const;
 
-export const ADJUSTMENTS_DETECTION = {
-  manual: 'manual',
-  daily: 'daily',
-} as const;
-
 /** Tipo de cada setting por su key punteada (para getSetting). */
 export interface IndicesSettingsByKey {
   'indices.icl.source': 'bcra' | 'manual';
   'indices.fx.source': 'dolarapi' | 'manual';
-  'indices.adjustments.detection': 'manual' | 'daily';
 }
 
 /** Settings del plugin con defaults aplicados y coerción por tipo. */
@@ -39,22 +33,18 @@ export interface IndicesSettings {
   readonly iclSource: 'bcra' | 'manual';
   /** Cotización del dólar — «Automática» busca la cotización del día cuando hay que emitir un cargo de un contrato en dólares, y la guarda. «A mano» la desactiva: se usa únicamente lo que esté cargado en Índices, y un cargo sin la cotización del día no se emite en vez de usar una vieja. Elegila a mano si trabajás sin internet o si pactaste con los propietarios un dólar que no es el que publica el mercado. · `indices.fx.source` · default: `"dolarapi"` */
   readonly fxSource: 'dolarapi' | 'manual';
-  /** Cuándo buscar contratos a actualizar — «A mano»: buscás vos desde Actualizaciones. «Diaria»: el sistema revisa todos los días y deja las propuestas esperando. En los dos casos el alquiler cambia solo cuando vos confirmás — nunca se aplica solo. · `indices.adjustments.detection` · default: `"manual"` */
-  readonly adjustmentsDetection: 'manual' | 'daily';
 }
 
 /** Nombre de prop → key punteada del manifest. */
 export const SETTING_KEYS = {
   iclSource: 'indices.icl.source',
   fxSource: 'indices.fx.source',
-  adjustmentsDetection: 'indices.adjustments.detection',
 } as const;
 
 /** Valores por defecto (los mismos del manifest). */
 export const SETTING_DEFAULTS = {
   'indices.icl.source': 'bcra',
   'indices.fx.source': 'dolarapi',
-  'indices.adjustments.detection': 'manual',
 } as const;
 
 const COERCE: {
@@ -64,8 +54,6 @@ const COERCE: {
     toEnum(values['indices.icl.source'], ['bcra', 'manual'], 'bcra'),
   'indices.fx.source': (values) =>
     toEnum(values['indices.fx.source'], ['dolarapi', 'manual'], 'dolarapi'),
-  'indices.adjustments.detection': (values) =>
-    toEnum(values['indices.adjustments.detection'], ['manual', 'daily'], 'manual'),
 };
 
 /** Lee UNA setting tipada desde los valores crudos del tenant (para handlers). */
@@ -81,7 +69,6 @@ export function readIndicesSettings(values: Record<string, unknown>): IndicesSet
   return {
     iclSource: COERCE['indices.icl.source'](values),
     fxSource: COERCE['indices.fx.source'](values),
-    adjustmentsDetection: COERCE['indices.adjustments.detection'](values),
   };
 }
 

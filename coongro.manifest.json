@@ -4,10 +4,7 @@
   "apiVersion": "2.0",
   "displayName": "Índices",
   "assets": {
-    "styles": [
-      "./dist/assets/tailwind.css",
-      "./dist/assets/fontawesome/css/all.min.css"
-    ]
+    "styles": ["./dist/assets/tailwind.css", "./dist/assets/fontawesome/css/all.min.css"]
   },
   "contributes": {
     "menus": [
@@ -52,11 +49,7 @@
         "module": "./dist/repositories/fx-rate.repository.js",
         "export": "FxRateRepository",
         "prefix": "indices.fx",
-        "actions": [
-          "houses",
-          "rate",
-          "convert"
-        ]
+        "actions": ["houses", "rate", "convert"]
       }
     ],
     "settings": {
@@ -99,12 +92,7 @@
                   "label": "Cargarla a mano"
                 }
               ],
-              "tags": [
-                "indices",
-                "icl",
-                "source",
-                "serie"
-              ]
+              "tags": ["indices", "icl", "source", "serie"]
             },
             {
               "key": "indices.fx.source",
@@ -121,40 +109,6 @@
                   "value": "manual",
                   "label": "Cargarla a mano"
                 }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "indices.series.deteccion-de-actualizaciones",
-          "page": "indices.series",
-          "label": "Detección de actualizaciones",
-          "order": 20,
-          "items": [
-            {
-              "key": "indices.adjustments.detection",
-              "type": "enum",
-              "label": "Cuándo buscar contratos a actualizar",
-              "description": "«A mano»: buscás vos desde Actualizaciones. «Diaria»: el sistema revisa todos los días y deja las propuestas esperando. En los dos casos el alquiler cambia solo cuando vos confirmás — nunca se aplica solo.",
-              "default": "manual",
-              "options": [
-                {
-                  "value": "manual",
-                  "label": "A mano"
-                },
-                {
-                  "value": "daily",
-                  "label": "Revisar todos los días"
-                }
-              ],
-              "tags": [
-                "indices",
-                "adjustments",
-                "detection",
-                "cuándo",
-                "buscar",
-                "contratos",
-                "actualizar"
               ]
             }
           ]
@@ -191,9 +145,7 @@
               "description": "Qué cotización usar, según lo pactado. Si se omite, la oficial."
             }
           },
-          "required": [
-            "amount"
-          ],
+          "required": ["amount"],
           "additionalProperties": false
         },
         "output": {
@@ -286,9 +238,7 @@
               "description": "Qué índice: «ICL», «IPC», «CasaPropia». Va en mayúsculas."
             }
           },
-          "required": [
-            "indexCode"
-          ],
+          "required": ["indexCode"],
           "additionalProperties": false
         },
         "output": {
@@ -355,12 +305,7 @@
               "description": "El alquiler vigente, el que se va a multiplicar por el factor."
             }
           },
-          "required": [
-            "indexCode",
-            "dateFrom",
-            "dateTo",
-            "previousRent"
-          ],
+          "required": ["indexCode", "dateFrom", "dateTo", "previousRent"],
           "additionalProperties": false
         },
         "output": {
@@ -492,11 +437,7 @@
               "description": "Hasta qué día."
             }
           },
-          "required": [
-            "indexCode",
-            "from",
-            "to"
-          ],
+          "required": ["indexCode", "from", "to"],
           "additionalProperties": false
         },
         "output": {
