@@ -4,7 +4,10 @@
   "apiVersion": "2.0",
   "displayName": "Índices",
   "assets": {
-    "styles": ["./dist/assets/tailwind.css", "./dist/assets/fontawesome/css/all.min.css"]
+    "styles": [
+      "./dist/assets/tailwind.css",
+      "./dist/assets/fontawesome/css/all.min.css"
+    ]
   },
   "contributes": {
     "menus": [
@@ -53,13 +56,7 @@
       }
     ],
     "settings": {
-      "groups": [
-        {
-          "id": "indices",
-          "label": "indices",
-          "order": 50
-        }
-      ],
+      "groups": [{ "id": "indices", "label": "indices", "order": 50 }],
       "pages": [
         {
           "id": "indices.series",
@@ -83,14 +80,8 @@
               "description": "«BCRA» baja la serie diaria del organismo cuando hace falta calcular una actualización. «Manual» la desactiva: los valores los cargás vos, y una actualización sin el valor cargado no se calcula. Sirve si trabajás sin internet o si preferís controlar cada número.",
               "default": "bcra",
               "options": [
-                {
-                  "value": "bcra",
-                  "label": "Bajarla del BCRA"
-                },
-                {
-                  "value": "manual",
-                  "label": "Cargarla a mano"
-                }
+                { "value": "bcra", "label": "Bajarla del BCRA" },
+                { "value": "manual", "label": "Cargarla a mano" }
               ],
               "tags": ["indices", "icl", "source", "serie"]
             },
@@ -101,14 +92,8 @@
               "description": "«Automática» busca la cotización del día cuando hay que emitir un cargo de un contrato en dólares, y la guarda. «A mano» la desactiva: se usa únicamente lo que esté cargado en Índices, y un cargo sin la cotización del día no se emite en vez de usar una vieja. Elegila a mano si trabajás sin internet o si pactaste con los propietarios un dólar que no es el que publica el mercado.",
               "default": "dolarapi",
               "options": [
-                {
-                  "value": "dolarapi",
-                  "label": "Buscarla automáticamente"
-                },
-                {
-                  "value": "manual",
-                  "label": "Cargarla a mano"
-                }
+                { "value": "dolarapi", "label": "Buscarla automáticamente" },
+                { "value": "manual", "label": "Cargarla a mano" }
               ]
             }
           ]
@@ -479,6 +464,59 @@
     ],
     "actionContracts": "./dist/agentic/contracts.js",
     "copilotCatalogFingerprint": "381a069a08d1ecf12dba90766f440de3",
-    "copilotCatalogContentFingerprint": "bcf659500d278dd2236ce29b4bb3967d"
+    "copilotCatalogContentFingerprint": "bcf659500d278dd2236ce29b4bb3967d",
+    "permissions": [
+      {
+        "id": "indices.fx.read",
+        "label": "Ver cotizaciones",
+        "effect": "read",
+        "grants": {
+          "actions": [
+            "indices.fx.convert",
+            "indices.fx.houses",
+            "indices.fx.rate"
+          ]
+        }
+      },
+      {
+        "id": "indices.values.manage",
+        "label": "Gestionar índices",
+        "effect": "write",
+        "grants": {
+          "actions": [
+            "indices.values.create",
+            "indices.values.update",
+            "indices.values.upsertMany"
+          ],
+          "views": ["indices.valor-de-indice.open"]
+        },
+        "requires": ["indices.values.read"],
+        "generatedBy": "builder"
+      },
+      {
+        "id": "indices.values.delete",
+        "label": "Eliminar índices",
+        "effect": "destructive",
+        "grants": { "actions": ["indices.values.delete"] },
+        "requires": ["indices.values.read"],
+        "generatedBy": "builder"
+      },
+      {
+        "id": "indices.values.read",
+        "label": "Ver índices",
+        "effect": "read",
+        "grants": {
+          "actions": [
+            "indices.values.getById",
+            "indices.values.lastValue",
+            "indices.values.list",
+            "indices.values.quote",
+            "indices.values.series"
+          ],
+          "views": ["indices.indices.open"]
+        },
+        "generatedBy": "builder"
+      }
+    ]
   }
 }

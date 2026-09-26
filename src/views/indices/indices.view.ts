@@ -4,7 +4,7 @@
  * ⚠️ ARCHIVO REGENERABLE: se reescribe al guardar el diseño en el Builder.
  * La lógica custom va en `handlers.ts` (nunca se pisa). Diseño: `spec.json`.
  */
-import { getHostReact, getHostUI, useIsMobile, views } from '@coongro/plugin-sdk';
+import { getHostReact, getHostUI, useAccess, useIsMobile, views } from '@coongro/plugin-sdk';
 
 import { useIndicesView } from './use-indices.js';
 
@@ -15,6 +15,7 @@ const h = React.createElement;
 const UI = getHostUI() as any;
 
 export function IndicesView() {
+  const access = useAccess();
   const isMobile = useIsMobile();
   const {
     loading,
@@ -187,6 +188,7 @@ export function IndicesView() {
       onClick: (row: any) => {
         void removeRow(row);
       },
+      hidden: () => !access.canRun('indices.values.delete'),
     },
   ];
   const renderTable = () =>
@@ -397,16 +399,18 @@ export function IndicesView() {
               h(
                 'div',
                 { style: { display: 'flex', justifyContent: 'flex-end' } },
-                h(
-                  UI.Button,
-                  {
-                    variant: 'default',
-                    onClick: () => {
-                      views.open('indices.valor-de-indice.open', undefined, { mode: 'dialog' });
-                    },
-                  },
-                  'Cargar valor'
-                )
+                access.canOpen('indices.valor-de-indice.open')
+                  ? h(
+                      UI.Button,
+                      {
+                        variant: 'default',
+                        onClick: () => {
+                          views.open('indices.valor-de-indice.open', undefined, { mode: 'dialog' });
+                        },
+                      },
+                      'Cargar valor'
+                    )
+                  : null
               )
             )
           )
