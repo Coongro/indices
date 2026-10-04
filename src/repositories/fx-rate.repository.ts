@@ -5,6 +5,7 @@ import { indexValueTable } from '../schema/index-value.js';
 import type { NewIndexValueRow } from '../schema/index-value.js';
 import { DOLAR_HOUSES, fetchRate, isDolarHouse, type DolarHouse } from '../services/dolar.js';
 import { convertToArs, describeRate } from '../services/fx.js';
+import { currentSourcePolicy } from '../services/sources.server.js';
 
 /**
  * Cotizaciones de moneda para los contratos pactados en dólares.
@@ -96,6 +97,18 @@ export class FxRateRepository {
         rateDate: guardado[0].value_date,
         source: guardado[0].source ?? 'cache',
       };
+    }
+
+    // Con «Cargarla a mano» no se sale a buscarla: se usa únicamente lo cargado en
+    // Índices. Falla en vez de tomar la cotización de otro día — emitir un cargo en
+    // dólares con el valor del martes cuando corresponde el del viernes es plata mal
+    // cobrada, y el inquilino no tiene cómo notarlo.
+    const politica = await currentSourcePolicy(this.db);
+    if (politica.fx === 'manual') {
+      throw new Error(
+        `No hay cotización cargada del ${house} para el ${wanted}. Cargala desde Índices, ` +
+          `o poné «Buscarla automáticamente» en la configuración para que se baje sola.`
+      );
     }
 
     const point = await fetchRate({ house, date: wanted, today });
